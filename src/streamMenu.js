@@ -841,12 +841,21 @@ var MPRISStream = new Lang.Class({
 
             if('xesam:artist' in metaD){
                 let artists = metaD['xesam:artist'];
-                let str = artists.get_child_value(0).get_string()[0];
+                let artistsType = artists.get_type();
 
-                for(let i = 1; i < artists.n_children(); i++)
-                    str += ', '+artists.get_child_value(i).get_string()[0];
+                if(artistsType.is_array()) {
+                    let str = artists.get_child_value(0).get_string()[0];
 
-                this._artistLbl.text = str;
+                    for(let i = 1; i < artists.n_children(); i++)
+                        str += ', '+artists.get_child_value(i).get_string()[0];
+
+                    this._artistLbl.text = str;
+                } else if(artistsType.is_basic()) {
+                    this._artistLbl.text = artists.get_string()[0];
+                } else {
+                    this._artistLbl.text = 'Unknown artist';
+                }
+
                 this._artistBox.show();
             } else {
                 this._artistBox.hide();
